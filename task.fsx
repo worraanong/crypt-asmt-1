@@ -35,10 +35,27 @@ let vigenereCipherEncrypt (key: string) (plaintext : string) =
   let keyPair = Seq.zip plaintext repeatedKeys
   keyPair |> Seq.iter (fun (x,y)-> shiftBy x y|> printf "%c")
 
+let numberOfOccurrances (letter: char) (plaintext : string) =
+  Seq.filter (fun x -> x = letter) plaintext |> Seq.length 
+
+(*IndexOfCoincidence
+  1. Calculate per each letter 
+     let na = (float) (numberOfOccurrances 'A' text)
+     let  N = (float) text.Length
+     let Na = (na/N) * (na-1.0)/(N-1.0)
+  2. Sum Na ... Nz
+*)
+let indexOfCoincidence (text : string) =
+  let N = (float) text.Length
+  let compute ni = (ni/N) * (ni-1.0)/(N-1.0)
+  ['A'..'Z'] |> Seq.sumBy (fun x-> numberOfOccurrances x text |> float |> compute)
+  
 
 // Assignment tasks
 
-// Task 1
+(**********
+   Task 1
+***********) 
 let plaintext = "BLOCKCHAIN"
 let ks1 = 9
 shiftCipherEncrypt ks1 plaintext
@@ -53,8 +70,17 @@ shiftCipherEncrypt ks2 P1
 
 // P2 is done by hand
 
-// Task 2
+(**********
+   Task 2
+***********) 
 let plaintextT2 = "FRIENDSMAKETHEWORSTENEMIES"
 let keyT2 = "LIST"
 vigenereCipherEncrypt keyT2 plaintextT2
 // QZAXYLKFLSWMSMOHCALXYMEBPA
+
+indexOfCoincidence plaintextT2
+// 0.07076923077
+
+indexOfCoincidence "QZAXYLKFLSWMSMOHCALXYMEBPA"
+// 0.03692307692
+
